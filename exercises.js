@@ -163,7 +163,14 @@ findBookAuthors.then(authors => {
 
 
 */
-let authorIdWithTwoBooks; // IMPLEMENT THIS FUNCTION
+let authorIdWithTwoBooks = db.any('SELECT books.author_id FROM books GROUP BY books.author_id HAVING COUNT(books.author_id) = 2'); // IMPLEMENT THIS FUNCTION
+authorIdWithTwoBooks.then( books => {
+  assert.deepEqual(books.length, 2)
+  assert.deepEqual(books[0].author_id, 1809)
+  assert.deepEqual(books[1].author_id, 7805)
+}).catch( error => {
+  console.log('Your query is incorrect')
+});
 
 /* --------End of Exercise 5---------------- */
 
