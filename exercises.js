@@ -5,7 +5,7 @@ const postgresConfig = {
   host: 'localhost',
   port: 5432,
   database: 'pg-promise-exercises',
-  user: '<change-this-to-your-username>', // replace this with your username
+  user: 'benjaminpettus', // replace this with your username
   password: '' //  replace this if you have set a password for your username (this is unlikely)
 };
 
@@ -27,11 +27,11 @@ const db = pg(postgresConfig);
 
 
 
-const allBooks = db.any('select * from books')
+const allBooks = db.any('SELECT * from books')
 /* This is calling the `then` function on the `allBooks` promise, and checks if
    we get back 15 rows. This assertion will fail. Make it PASS!*/
 allBooks.then(books => {
-  assert.deepEqual(books.length, 20)
+  assert.deepEqual(books.length, 15)
 }).catch(error => {
   console.log('Dang, my assertion failed.', error);
 });
@@ -55,7 +55,7 @@ allBooks.then(books => {
 
 */
 
-let firstTenBooks; // = .... IMPLEMENT THIS FUNCTION
+let firstTenBooks = db.any('SELECT * from books LIMIT 10'); // = .... IMPLEMENT THIS FUNCTION
 firstTenBooks.then(books => {
   assert(books.length, 10)
 }).catch(error => {
@@ -83,7 +83,7 @@ firstTenBooks.then(books => {
 
 */
 
-let findAuthorsOrderedByLastName; // = .... IMPLEMENT THIS FUNCTION
+let findAuthorsOrderedByLastName = db.any('SELECT * from authors ORDER BY last_name'); // = .... IMPLEMENT THIS FUNCTION
 findAuthorsOrderedByLastName.then(authors => {
   assert.deepEqual(authors.length, 19)
   assert.deepEqual(authors[0].last_name, 'Alcott')
@@ -128,8 +128,15 @@ findAuthorsOrderedByLastName.then(authors => {
    {first_name: 'Theodor Seuss', last_name: 'Geisel', title: 'Bartholomew and the Oobleck'}
    {first_name: 'Theodor Seuss', last_name: 'Geisel', title: 'The Cat in the Hat'}]
 */
-let findBookAuthors; // IMPLEMENT THIS FUNCTION
-
+let findBookAuthors = db.any('SELECT authors.first_name, authors.last_name, books.title FROM authors INNER JOIN books ON books.author_id=authors.id;'); // IMPLEMENT THIS FUNCTION
+findBookAuthors.then(authors => {
+  assert.deepEqual(authors.length, 15)
+  assert.deepEqual(authors[0].last_name, 'Worsley')
+  assert.deepEqual(authors[8].title, 'The Tell-Tale Heart')
+  assert.deepEqual(authors[14].last_name, 'Geisel')
+}).catch(error => {
+  console.log('Whoops, my function doesnt behave as expected.', error);
+});
 /* --------End of Exercise 4---------------- */
 
 
