@@ -169,7 +169,7 @@ authorIdWithTwoBooks.then( books => {
   assert.deepEqual(books[0].author_id, 1809)
   assert.deepEqual(books[1].author_id, 7805)
 }).catch( error => {
-  console.log('Your query is incorrect')
+  console.log('Your query is incorrect', error)
 });
 
 /* --------End of Exercise 5---------------- */
@@ -200,7 +200,16 @@ authorIdWithTwoBooks.then( books => {
       {title: 'The Tell-Tale Heart'}]
 
 */
-let bookTitlesWithMultipleEditions; // IMPLEMENT THIS FUNCTION
+let bookTitlesWithMultipleEditions =
+  db.any('SELECT title FROM books INNER JOIN editions ON books.id=editions.book_id GROUP BY title HAVING COUNT(editions.edition) > 1') // IMPLEMENT THIS FUNCTION
+bookTitlesWithMultipleEditions.then(books => {
+  assert.deepEqual(books.length, 5)
+  assert.deepEqual(books[0].title, 'The Shining')
+  assert.deepEqual(books[2].title, 'Dune')
+  assert.deepEqual(books[4].title, 'The Tell-Tale Heart')
+}).catch( error => {
+  console.log('Your query is incorrect', error)
+});
 
 /* --------End of Exercise 6---------------- */
 
@@ -227,11 +236,18 @@ let bookTitlesWithMultipleEditions; // IMPLEMENT THIS FUNCTION
      {title: 'The Cat in the Hat', first_name: 'Theodor Seuss', last_name: 'Geisel'}]
 
 */
-let findStockedBooks; // IMPLEMENT THIS FUNCTION
-
+let findStockedBooks = db.any(''); // IMPLEMENT THIS FUNCTION
+findStockedBooks.then(books => {
+  assert.deepEqual(books.length, 2)
+  assert.deepEqual(books[0].last_name, 'Herbert')
+  assert.deepEqual(books[1].first_name, 'Theodor Seuss')
+}).catch( error => {
+  console.log('Your findStockedBooks query is incorrect', error)
+});
 /* --------End of Exercise 7---------------- */
 
 
+//gg
 
 
 console.log('Reached the end!');
